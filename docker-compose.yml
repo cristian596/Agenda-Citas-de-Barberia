@@ -1,0 +1,30 @@
+services:
+  # CONTENEDOR 1: La Base de Datos (PostgreSQL)
+  db:
+    image: postgres:15-alpine
+    container_name: citas_postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: admin_citas
+      POSTGRES_PASSWORD: password_secreto_123
+      POSTGRES_DB: bd_sistema_citas
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # CONTENEDOR 2: Tu Backend en Express
+  backend_app:
+    build: ./backend
+    container_name: citas_express_backend
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      # AQUÍ ESTÁ EL ENTRALAZADO: Usamos "db" en lugar de "localhost"
+      - DATABASE_URL=postgresql://admin_citas:password_secreto_123@db:5432/bd_sistema_citas
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
