@@ -76,7 +76,9 @@ function App() {
             <h2 className='text-xl font-semibold mb-4 text-gray-800'>Agendar Citas</h2>
             <form onSubmit={manejarEnvio} className='space-y-4'>
               <div>
-                <label className='block- text-sm font-medium text-gray-700'>Cliente</label>
+                <label className='block- text-sm font-medium text-gray-700'>Cliente
+
+                </label>
                 <input type="text"
                 value={cliente}
                 onChange={(e)=> setCliente(e.target.value)}
