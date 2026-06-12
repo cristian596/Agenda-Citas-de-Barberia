@@ -1,5 +1,31 @@
 import { useState,useEffect, useTransition } from 'react'
 
+
+const Horas_Disponibles = [
+  "08:00 AM", "09:00 AM", "10:00 AM", "11:00 AM",
+  "02:00 PM", "03:00 PM", "04:00 PM", "05:00 PM", "06:00 PM"
+];
+
+const Servicios_Hombres = [
+  "Corte de Cabello",
+  "Corte de Barba",
+  "Combo (Pelo + Barba)",
+  "Perfilado de Cejas",
+  "Exfoliación Facial",
+  "Uñas"
+];
+
+const Servicios_Mujeres = [
+  "Corte + Cepillado",
+  "Tintura Completa",
+  "Keratina / Alisado",
+  "Hidratación Profunda",
+  "Peinado de Fiesta / Ondas",
+  "Manicure + Pedicure",
+  "Diseño de Cejas + Bozo",
+  "Maquillaje Profesional"
+];
+
 function App() {
   //Estaado que guarda las citas que vienen del backend
   const [citas, setCitas] = useState([]) 
@@ -28,7 +54,7 @@ function App() {
     e.preventDefault()
 
     if(!cliente || !servicio || !hora){
-      alert("Por favor llene todos los campos")
+      alert("Por favor llene todos los campos y selecione la hora")
       return
     }
 
@@ -70,9 +96,9 @@ function App() {
           <p className='text-gray-600 mt-2'>Panel de administracion local</p>
         </header>
 
-        <div className='grid gap-6 md:grid-cols-3'>
+        <div className='grid gap-6 md:grid-cols-4'>
 
-          <div className='bg-white p-6 rounded-lg shadow-md md:col-span-1 h-fit'>
+          <div className='bg-white p-6 rounded-lg shadow-md md:col-span-2 h-fit'>
             <h2 className='text-xl font-semibold mb-4 text-gray-800'>Agendar Citas</h2>
             <form onSubmit={manejarEnvio} className='space-y-4'>
               <div>
@@ -86,22 +112,86 @@ function App() {
                 className='mt-1 block w-full rounded-md  border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 bg-gray-50 border'/>
               </div>
 
-              <div>
-                <label className='block- text-sm font-medium text-gray-700'>Servicios</label>
-                <input type="text"
-                value={servicio}
-                onChange={(e)=> setServicio(e.target.value)}
-                placeholder='Ej. Corte, Uñas'
-                className='mt-1 block w-full rounded-md  border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 bg-gray-50 border'/>
+              {/*Servicios que pueden seleccionar */}
+              <div className='grid grid-cols-2 gap-3'>
+
+                <div>
+                  <label className='block- text-sm font-medium text-gray-700'>Servicios Hombre</label>
+                  <div className='grid grid-cols-2 gap-2'>
+                      {Servicios_Hombres.map((serviH)=>{
+                        const seleccionado = servicio === serviH
+
+                        return(
+                          <button
+                          key={serviH}
+                          type='button'
+                          onClick={()=>setServicio(serviH)}
+                          className={`p-2 text-sm font-medium border rounded-md transition-all cursor-pointer text-center ${
+                            seleccionado 
+                            ? "bg-indigo-600 text-white font-semibold transform scale-105"
+                            : "bg-white text-gray-700 border-gray-300 hover:bg-indigo-50 hover:border-indigo-500"
+                          }`}
+                          >
+                            {serviH}
+                          </button>
+                        )
+                        })
+                      }
+                  </div>
+                </div>
+
+                <div>
+                  <label className='block- text-sm font-medium text-gray-700'>Servicios Mujeres</label>
+                  <div className='grid grid-cols-2 gap-2'>
+                      {Servicios_Mujeres.map((serviH)=>{
+                        const seleccionado = servicio === serviH
+
+                        return(
+                          <button
+                          key={serviH}
+                          type='button'
+                          onClick={()=>setServicio(serviH)}
+                          className={`p-2 text-sm font-medium border rounded-md transition-all cursor-pointer text-center ${
+                            seleccionado 
+                            ? "bg-indigo-600 text-white font-semibold transform scale-105"
+                            : "bg-white text-gray-700 border-gray-300 hover:bg-indigo-50 hover:border-indigo-500"
+                          }`}
+                          >
+                            {serviH}
+                          </button>
+                        )
+                        })
+                      }
+                  </div>
+                </div>
+
               </div>
 
               <div>
-                <label className='block- text-sm font-medium text-gray-700'>Hora</label>
-                <input type="text"
-                value={hora}
-                onChange={(e)=> setHora(e.target.value)}
-                placeholder='Ej. 2:30PM'
-                className='mt-1 block w-full rounded-md  border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 bg-gray-50 border'/>
+                <label className='block- text-sm font-medium text-gray-700'>Selecciona la hora del servicio</label>
+                <div className='grid grid-cols-3 gap-2'>
+                  {Horas_Disponibles.map((horaOp)=>{
+                    //Verificamos si esta tarjeta es la que el ususario selecciono actualmente
+                    const estaSeleccionada = hora === horaOp
+
+                    return(
+                      <button
+                      key={horaOp}
+                      type='button'
+                      onClick={()=> setHora(horaOp)}
+                      className={`p-3 text-sm font-medium rounded-lg border text-center transition-all cursor-pointer ${
+                        estaSeleccionada
+                        ? "bg-indigo-600 text-white border-indigo-600 shadow-md transform scale-105"
+                        : "bg-white text-gray-700 border-gray-300 hover:border-indigo-500 hover:bg-indigo-50"
+                      }`}
+                      >
+                        {horaOp}
+                      </button>
+                    )
+                  })
+
+                  }
+                </div>
               </div>
               <button 
               type='submit'
