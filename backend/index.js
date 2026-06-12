@@ -79,6 +79,28 @@ app.post('/api/citas', async (req, res) => {
   }
 });
 
+// --RUTAS PARA ELIMINAR CITAS-- 
+app.delete('/api/citas/:id',async(req,res)=>{
+  const {id} = req.params;
+
+  try {
+    const resultado = await pool.query(
+      'DELETE FROM citas WHERE id = $1 RETURNING *',
+      [id]
+    );
+
+    if(resultado.rows.length === 0){
+      return res.status(404).json({error: "La cita no existe."})
+    }
+
+    console.log(`🗑️ Cita eliminada con éxito: ID ${id}`)
+    res.json({mensaje : "Cita eliminada correctamente", cita: resultado.rows[0]})
+  } catch (error) {
+    console.error("ERROR AL ELIMINAR: ",error);
+    res.status(500).json({error:"Error interno al eliminar la cita de la BD" })
+  }
+})
+
 app.listen(PORT, () => {
   console.log(`🚀 Servidor corriendo en el puerto ${PORT}`);
 });

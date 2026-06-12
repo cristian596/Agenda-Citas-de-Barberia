@@ -82,6 +82,28 @@ function App() {
     }
   }
 
+  //Funcion para eliminar citas del backend
+  const eliminarCitas = async (id) =>{
+    //Confirmacion para evitar clicks erroneos
+    if(!window.confirm("¿Estás seguro de que deseas cancelar esta cita?")){
+      return;
+    }
+
+    try {
+      const respuesta = await fetch(`http://localhost:5000/api/citas/${id}`,{
+        method: 'DELETE'
+      });
+
+      if (respuesta.ok){
+        //Si el backend lo borro con exito, volvemos a pedir las citas para refrescar la pagina
+        obtenerCitas();
+      }else{
+        alert("Hubo un error al intentar eliminar la cita.")
+      }
+    } catch (error) {
+      console.error("Error al conectar con el servidor para eliminar:", error);
+    }
+  }
 
   useEffect(()=>{
     obtenerCitas()
@@ -214,9 +236,19 @@ function App() {
               <div className='grid gap-4 md:grid-col'>
                 {citas.map((cita)=>(
                   <div key={cita.id} className='border-l-4 border-indigo-500 bg-indigo-50 p-4 rounded-r-lg shadow-md'>
-                    <p className='font-bold text-gray-900 text-lg'>{cita.cliente}</p>
-                    <p className='text-sm text-gray-700 mt-1'> <span className='font-semibold'>Servicio: </span>{cita.servicio}</p>
-                    <p className='text-sm text-indigo-600 font-medium mt-2'>{cita.hora}</p>
+                    <div>
+                      <p className='font-bold text-gray-900 text-lg'>{cita.cliente}</p>
+                      <p className='text-sm text-gray-700 mt-1'> <span className='font-semibold'>Servicio: </span>{cita.servicio}</p>
+                      <p className='text-sm text-indigo-600 font-medium mt-2'>{cita.hora}</p>
+                    </div>
+
+                    {/*Boton para eliminar citas */}
+                    <button
+                    onClick={()=> eliminarCitas(cita.id)}
+                    className='bg-red-100 hover:bg-red-600 text-red-600 hover:text-white p-2 rounded-lg transition-colors cursor-pointer text-sm font-medium'
+                    >
+                      Cancelar
+                    </button>
                   </div>
                 ))}
               </div>
