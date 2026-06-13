@@ -36,6 +36,10 @@ function App() {
   const[servicio,setServicio] = useState('')
   const[hora,setHora] = useState('')
 
+  //Estados de las fechas
+  const fechaHoy = new Date().toISOString().split('T')[0];
+  const [fecha, setFecha] = useState(fechaHoy)
+
   //Funcion que hac ela peticion HTTP al backend
   const obtenerCitas = async ()=>{
     try {
@@ -53,12 +57,12 @@ function App() {
   const manejarEnvio = async(e)=> {
     e.preventDefault()
 
-    if(!cliente || !servicio || !hora){
+    if(!cliente || !servicio || !fecha || !hora){
       alert("Por favor llene todos los campos y selecione la hora")
       return
     }
 
-    const nuevaCita = {cliente,servicio,hora}
+    const nuevaCita = {cliente,servicio, fecha, hora}
 
     try {
       const respuesta = await fetch('http://localhost:5000/api/citas',{
@@ -190,16 +194,33 @@ function App() {
               </div>
 
               <div>
+                <label htmlFor="" className='block text-sm font-medium mb-2 text-gray-700'>Seleccione el dia de la cita</label>
+                <input 
+                type="date" 
+                value={fecha}
+                min={fechaHoy}
+                onChange={(e)=>{
+                  setFecha(e.target.value)
+                  setHora('')
+                }}
+                className='w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500'
+                />
+              </div>
+
+              <div>
                 <label className='block- text-sm font-medium text-gray-700'>Selecciona la hora del servicio</label>
                 <div className='grid grid-cols-3 gap-2'>
                   {Horas_Disponibles.map((horaOp)=>{
                     //Verificamos si esta tarjeta es la que el ususario selecciono actualmente
                     const estaSeleccionada = hora === horaOp
+                    //Buscamos si hay una cita con la misma fecha y hora
+                    const estaOcupada = citas.some(cita => cita.fecha === fecha && cita.hora === horaOp)
 
                     return(
                       <button
                       key={horaOp}
                       type='button'
+                      disabled = {estaOcupada}
                       onClick={()=> setHora(horaOp)}
                       className={`p-3 text-sm font-medium rounded-lg border text-center transition-all cursor-pointer ${
                         estaSeleccionada

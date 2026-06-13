@@ -28,6 +28,7 @@ const conectarConReintentos = async (intentosRestantes = 5) => {
         id SERIAL PRIMARY KEY,
         cliente VARCHAR(100) NOT NULL,
         servicio VARCHAR(100) NOT NULL,
+        fecha VARCHAR (50) NOT NULL,
         hora VARCHAR(50) NOT NULL
       );
     `);
@@ -60,16 +61,16 @@ app.get('/api/citas', async (req, res) => {
 
 // Ruta POST: Inserta una nueva cita en PostgreSQL
 app.post('/api/citas', async (req, res) => {
-  const { cliente, servicio, hora } = req.body;
+  const { cliente, servicio, fecha, hora } = req.body;
 
-  if (!cliente || !servicio || !hora) {
+  if (!cliente || !servicio || !fecha || !hora) {
     return res.status(400).json({ error: "Faltan campos obligatorios." });
   }
 
   try {
     const nuevoRegistro = await pool.query(
-      'INSERT INTO citas (cliente, servicio, hora) VALUES ($1, $2, $3) RETURNING *',
-      [cliente, servicio, hora]
+      'INSERT INTO citas (cliente, servicio,fecha, hora) VALUES ($1, $2, $3, $4) RETURNING *',
+      [cliente, servicio, fecha, hora]
     );
     console.log("Cita guardada en BD:", nuevoRegistro.rows[0]);
     res.status(201).json(nuevoRegistro.rows[0]);
