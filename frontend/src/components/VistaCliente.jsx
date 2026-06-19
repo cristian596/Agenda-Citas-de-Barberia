@@ -40,7 +40,7 @@ const VistaCliente = () => {
       const fechaHoy = new Date().toISOString().split('T')[0];
       const [fecha, setFecha] = useState(fechaHoy)
     
-      //Funcion que hac ela peticion HTTP al backend
+      //Funcion que hace la peticion HTTP al backend
       const obtenerCitas = async ()=>{
         try {
           const respuesta = await fetch('http://localhost:5000/api/citas')
@@ -120,6 +120,7 @@ const VistaCliente = () => {
             <header className='mb-8 text-center'>
               <h1 className='text-4xl font-bold text-indigo-600'>Sistema de Citas</h1>
               <p className='text-gray-600 mt-2'>Panel de administracion local</p>
+              <button className='border cursor-pointer p-2 rounded-xl text-xl'>✂️ Barbero</button>
             </header>
     
             <div className='grid gap-6 md:grid-cols-4'>
