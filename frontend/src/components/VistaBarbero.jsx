@@ -22,6 +22,11 @@ const VistaBarbero = () => {
     obtenerCitas()
   },[])
 
+  const hoy = new Date().toISOString().split("T")[0]; 
+  const citasHoy = [...citas] 
+  .filter((cita) => cita.fecha === hoy)
+  .sort ((a, b) => a.hora.localeCompare(b.hora))
+
   return (
     <>
     <div className='flex flex-col justify-center items-center p-10'>
@@ -38,11 +43,13 @@ const VistaBarbero = () => {
             ):!Array.isArray(citas) || citas.length === 0 ? (
                 <p className="text-gray-500">No hay citas registradas para hoy.</p>
             ):(
+              
+
               <div className='grid grid-cols-2'>
-                {citas.map((cita)=>{
+                {citasHoy.map((cita)=>{
                   return(
-                    <div className='grid grid-cols-2 m-2 border'>
-                      <div key={cita.id} className='flex flex-col gap-1 p-2 border-l-4 border-indigo-500'>
+                    <div key={cita.id} className='grid grid-cols-2 m-2 border'>
+                      <div className='flex flex-col gap-1 p-2 border-l-4 border-indigo-500'>
                         <p className='text-lg font-bold'>{cita.cliente}</p>
                         <p className='text-lg text-gray-700'><span className='font-semibold'>Servicio: </span>{cita.servicio}</p>
                         <p className='text-sm text-indigo-600 font-bold' >{cita.fecha} {cita.hora}</p>

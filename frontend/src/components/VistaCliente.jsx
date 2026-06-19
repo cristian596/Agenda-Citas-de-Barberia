@@ -3,8 +3,15 @@ import { useNavigate } from 'react-router';
 
 
 const Horas_Disponibles = [
-  "08:00 AM", "09:00 AM", "10:00 AM", "11:00 AM",
-  "02:00 PM", "03:00 PM", "04:00 PM", "05:00 PM", "06:00 PM"
+  { value: "08:00", label: "08:00 AM" },
+  { value: "09:00", label: "09:00 AM" },
+  { value: "10:00", label: "10:00 AM" },
+  { value: "11:00", label: "11:00 AM" },
+  { value: "14:00", label: "02:00 PM" },
+  { value: "15:00", label: "03:00 PM" },
+  { value: "16:00", label: "04:00 PM" },
+  { value: "17:00", label: "05:00 PM" },
+  { value: "18:00", label: "06:00 PM" },
 ];
 
 const Servicios_Hombres = [
@@ -227,23 +234,23 @@ const VistaCliente = () => {
                     <div className='grid grid-cols-3 gap-2'>
                       {Horas_Disponibles.map((horaOp)=>{
                         //Verificamos si esta tarjeta es la que el ususario selecciono actualmente
-                        const estaSeleccionada = hora === horaOp
+                        const estaSeleccionada = hora === horaOp.label
                         //Buscamos si hay una cita con la misma fecha y hora
-                        const estaOcupada = citas.some(cita => cita.fecha === fecha && cita.hora === horaOp)
+                        const estaOcupada = citas.some(cita => cita.fecha === fecha && cita.hora === horaOp.label)
     
                         return(
                           <button
-                          key={horaOp}
+                          key={horaOp.label}
                           type='button'
                           disabled = {estaOcupada}
-                          onClick={()=> setHora(horaOp)}
+                          onClick={()=> setHora(horaOp.label)}
                           className={`p-3 text-sm font-medium rounded-lg border text-center transition-all cursor-pointer ${
                             estaSeleccionada
                             ? "bg-indigo-600 text-white border-indigo-600 shadow-md transform scale-105"
                             : "bg-white text-gray-700 border-gray-300 hover:border-indigo-500 hover:bg-indigo-50"
                           }`}
                           >
-                            {horaOp}
+                            {horaOp.label}
                           </button>
                         )
                       })
