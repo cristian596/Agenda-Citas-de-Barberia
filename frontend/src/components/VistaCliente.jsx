@@ -1,4 +1,5 @@
 import { useState,useEffect, useTransition } from 'react'
+import { useNavigate } from 'react-router';
 
 
 const Horas_Disponibles = [
@@ -39,6 +40,9 @@ const VistaCliente = () => {
       //Estados de las fechas
       const fechaHoy = new Date().toISOString().split('T')[0];
       const [fecha, setFecha] = useState(fechaHoy)
+
+      //Funcion para moverse entre componentes 
+      const navigate = useNavigate()
     
       //Funcion que hace la peticion HTTP al backend
       const obtenerCitas = async ()=>{
@@ -52,7 +56,16 @@ const VistaCliente = () => {
           setCitasCargando(false)
         }
       }
-    
+  
+      //Mensaje para la ventana de barberos
+      const eventClick = () =>{
+        if(!window.confirm("Este apartado es solo para los barberos")){
+          return;
+        }
+
+        navigate("/barbero")
+      }
+
       //Funcion para enviar citas al backend
       const manejarEnvio = async(e)=> {
         e.preventDefault()
@@ -120,7 +133,8 @@ const VistaCliente = () => {
             <header className='mb-8 text-center'>
               <h1 className='text-4xl font-bold text-indigo-600'>Sistema de Citas</h1>
               <p className='text-gray-600 mt-2'>Panel de administracion local</p>
-              <button className='border cursor-pointer p-2 rounded-xl text-xl'>✂️ Barbero</button>
+              <button className='border cursor-pointer p-2 rounded-xl text-xl active:scale-95 duration-300 mt-2'
+              onClick={eventClick}>✂️ Agenda Barbero</button>
             </header>
     
             <div className='grid gap-6 md:grid-cols-4'>
