@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
+import { HiArrowSmallLeft } from "react-icons/hi2";
 
 const VistaBarbero = () => {
   const[citas,setCitas] = useState([])
@@ -46,6 +47,17 @@ const VistaBarbero = () => {
       ? citasOrdenadas.filter(cita => cita.fecha === fecha)
       : citasOrdenadas
 
+      //Logica citas agendadas del dia
+      const citasDia = citas.filter((cita)=> cita.fecha === fecha)
+      const cantidadCitas = citasDia.length
+      
+      //Boton para enviar mensaje en la pantalla para volver
+      const enventClick = ()=>{
+        if(!window.confirm("Seguro que quieres volver!"))
+          return
+        navigate("/")
+      }
+
   useEffect(()=>{
     obtenerCitas()
   },[])
@@ -55,6 +67,13 @@ const VistaBarbero = () => {
       <div>
         <div className='text-center'>
           <h1 className='text-5xl text-indigo-600 mb-2 font-serif font-semibold'>Agenda del barbero</h1>
+          <div>
+            {cantidadCitas === 0 ? (
+              <p>No hay citas agendades para Hoy!</p>
+            ):(
+              <p>Hoy tienes {cantidadCitas} cita(s) programada(s)</p>
+            )}          
+        </div>
           <p className='text-lg text-mauve-900 font-medium m-2'>Cada cliente llega buscando un cambio; está en tus manos convertir ese momento en una experiencia inolvidable. ¡Haz que cada corte cuente! 💈✂️</p>
         </div>
 
@@ -82,14 +101,15 @@ const VistaBarbero = () => {
                 {citasFiltradas.length === 0 ? (
                   <p>Aun no hay citas agendadas para esta fecha</p>
                 ):(
-                  <div className='grid grid-cols-2'>
+                  <div className='grid grid-cols-4'>
                   {citasFiltradas.map((cita)=>{
                   return(
-                    <div key={cita.id} className='grid grid-cols-2 m-2 border'>
-                      <div className={`flex flex-col gap-1 p-2 border-l-4 border-indigo-500`}>
-                        <p className='text-lg font-bold'>{cita.cliente}</p>
-                        <p className='text-lg text-gray-700'><span className='font-semibold'>Servicio: </span>{cita.servicio}</p>
-                        <p className='text-sm text-indigo-600 font-bold'>{cita.fecha} {formatearHora(cita.hora)}</p>
+                    <div key={cita.id} className='m-2 border rounded-2xl hover:scale-105 duration-300 shadow-2xl '>
+                      <div className={`flex flex-col gap-1 p-2 border-l-4 border-indigo-500 cursor-pointer rounded-2xl min-h-36 max-w-80`}>
+                        <p className='text-lg font-bold'>👤 {cita.cliente}</p>
+                        <p className='text-lg text-gray-700'><span className='font-semibold'>✂️ Servicio <br /></span> ✨{cita.servicio}</p>
+                        <p className='text-sm text-indigo-600 font-bold'>🕒 {formatearHora(cita.hora)}</p>
+                        <p className='text-sm text-indigo-600 font-bold'>📆 {cita.fecha}</p>
                       </div>
                     </div>
                       ) 
@@ -106,8 +126,8 @@ const VistaBarbero = () => {
     </div>
     <div className='flex justify-center'>
       <button 
-      onClick={()=>navigate("/")}
-      className='border border-black p-2 rounded-lg bg-red-500 text-white font-bold cursor-pointer hover:bg-red-700 active:scale-95 duration-300'> Atras</button>
+      onClick={enventClick}
+      className='flex items-center gap-2 border border-black p-2 rounded-lg bg-red-500 text-white font-bold cursor-pointer hover:bg-red-700 active:scale-95 duration-300 '><HiArrowSmallLeft /> Volver</button>
     </div>
     </>
   )

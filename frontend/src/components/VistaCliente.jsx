@@ -265,7 +265,6 @@ const VistaCliente = () => {
                           </button>
                         )
                       })
-    
                       }
                     </div>
                   </div>
