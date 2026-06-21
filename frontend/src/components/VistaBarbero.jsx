@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router'
 
 const VistaBarbero = () => {
   const[citas,setCitas] = useState([])
   const [citasCargando, setCitasCargando] = useState(true)
   const fechaHoy = new Date().toISOString().split("T")[0]
   const [fecha, setFecha] = useState(fechaHoy)
+  const navigate = useNavigate()
 
   //Obtenemos las citas del backend
   const obtenerCitas = async ()=>{
@@ -31,6 +33,7 @@ const VistaBarbero = () => {
           .padStart(2, "0")} ${periodo}`;
       };
 
+      //Ordenamos las citas segun su fecha
       const citasOrdenadas = [...citas].sort((a,b)=>{
         const fechaHoraA = new Date(`${a.fecha}T${a.hora}`)
         const fechaHoraB = new Date(`${b.fecha}T${b.hora}`)
@@ -38,6 +41,7 @@ const VistaBarbero = () => {
         return fechaHoraA - fechaHoraB
       })
 
+      //Realizamos un filtro de citas segun la fecha
       const citasFiltradas = fecha 
       ? citasOrdenadas.filter(cita => cita.fecha === fecha)
       : citasOrdenadas
@@ -45,10 +49,6 @@ const VistaBarbero = () => {
   useEffect(()=>{
     obtenerCitas()
   },[])
- 
-  const citasHoy = [...citas]
-  .sort ((a, b) => a.hora.localeCompare(b.hora))
-
   return (
     <>
     <div className='flex flex-col justify-center items-center p-10'>
@@ -81,7 +81,7 @@ const VistaBarbero = () => {
                   <p>Aun no hay citas agendadas para esta fecha</p>
                 ):(
                   <div className='grid grid-cols-2'>
-                  {citasOrdenadas.map((cita)=>{
+                  {citasFiltradas.map((cita)=>{
                   return(
                     <div key={cita.id} className='grid grid-cols-2 m-2 border'>
                       <div className={`flex flex-col gap-1 p-2 border-l-4 border-indigo-500`}>
@@ -101,6 +101,11 @@ const VistaBarbero = () => {
           </div>
         </div>
       </div> 
+    </div>
+    <div className='flex justify-center'>
+      <button 
+      onClick={()=>navigate("/")}
+      className='border border-black p-2 rounded-lg bg-red-500 text-white font-bold cursor-pointer hover:bg-red-700 active:scale-95 duration-300'> Atras</button>
     </div>
     </>
   )

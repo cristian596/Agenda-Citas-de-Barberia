@@ -155,9 +155,9 @@ const VistaCliente = () => {
               onClick={eventClick}>✂️ Agenda Barbero</button>
             </header>
     
-            <div className='grid gap-6 md:grid-cols-4'>
+            <div className='grid gap-6 md:grid-cols-6'>
     
-              <div className='bg-white p-6 rounded-lg shadow-md md:col-span-2 h-fit'>
+              <div className='bg-white p-6 rounded-lg shadow-md md:col-span-3 h-fit'>
                 <h2 className='text-xl font-semibold mb-4 text-gray-800'>Agendar Citas</h2>
                 <form onSubmit={manejarEnvio} className='space-y-4'>
                   <div>
@@ -279,7 +279,7 @@ const VistaCliente = () => {
     
     
               {/*Seccion de Citas */}
-              <div className='bg-white p-6 rounded-lg shadow-md md:col-span-2'>
+              <div className='bg-white p-6 rounded-lg shadow-md md:col-span-3'>
                 <h2 className='text-2xl font-semibold mb-4 text-gray-800'>Citas Programadas</h2>
     
                 {citasCargando ? (
@@ -287,7 +287,7 @@ const VistaCliente = () => {
                 ): !Array.isArray(citas) || citas.length === 0 ? (
                   <p className="text-gray-500">No hay citas registradas para hoy.</p>
                 ):(
-                  <div className='grid gap-4 md:grid-col'>
+                  <div className='grid grid-cols-2 gap-4'>
                     {citas.map((cita)=>(
                       <div key={cita.id} className='border-l-4 border-indigo-500 bg-indigo-50 p-4 rounded-r-lg shadow-md'>
                         <div>
@@ -309,9 +309,6 @@ const VistaCliente = () => {
                 )}
               </div>
             </div>
-    
-            
-    
           </div>
         </div>
         </>
