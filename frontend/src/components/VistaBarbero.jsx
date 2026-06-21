@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react'
 const VistaBarbero = () => {
   const[citas,setCitas] = useState([])
   const [citasCargando, setCitasCargando] = useState(true)
+  const fechaHoy = new Date().toISOString().split("T")[0]
+  const [fecha, setFecha] = useState(fechaHoy)
 
   //Obtenemos las citas del backend
   const obtenerCitas = async ()=>{
@@ -17,14 +19,34 @@ const VistaBarbero = () => {
     }
   }
 
+      //Formatear fecha de las citas 
+      const formatearHora = (hora24) => {
+        const [hora, minuto] = hora24.split(":").map(Number);
+
+        const periodo = hora >= 12 ? "PM" : "AM";
+        const hora12 = hora % 12 || 12;
+
+        return `${hora12.toString().padStart(2, "0")}:${minuto
+          .toString()
+          .padStart(2, "0")} ${periodo}`;
+      };
+
+      const citasOrdenadas = [...citas].sort((a,b)=>{
+        const fechaHoraA = new Date(`${a.fecha}T${a.hora}`)
+        const fechaHoraB = new Date(`${b.fecha}T${b.hora}`)
+
+        return fechaHoraA - fechaHoraB
+      })
+
+      const citasFiltradas = fecha 
+      ? citasOrdenadas.filter(cita => cita.fecha === fecha)
+      : citasOrdenadas
 
   useEffect(()=>{
     obtenerCitas()
   },[])
-
-  const hoy = new Date().toISOString().split("T")[0]; 
-  const citasHoy = [...citas] 
-  .filter((cita) => cita.fecha === hoy)
+ 
+  const citasHoy = [...citas]
   .sort ((a, b) => a.hora.localeCompare(b.hora))
 
   return (
@@ -37,6 +59,15 @@ const VistaBarbero = () => {
         </div>
 
         <div>
+          <div className='flex justify-end'>
+            <input
+            type="date" 
+            className='mt-4'
+            value={fecha}
+            min={fechaHoy}
+            onChange={(e)=>setFecha(e.target.value)}
+            />
+          </div>
           <div className='flex flex-col justify-center items-center p-2'>
             {citasCargando ? (
               <p className="text-gray-500">Cargando Citas...</p>
@@ -45,19 +76,25 @@ const VistaBarbero = () => {
             ):(
               
 
-              <div className='grid grid-cols-2'>
-                {citasHoy.map((cita)=>{
+              <div>
+                {citasFiltradas.length === 0 ? (
+                  <p>Aun no hay citas agendadas para esta fecha</p>
+                ):(
+                  <div className='grid grid-cols-2'>
+                  {citasOrdenadas.map((cita)=>{
                   return(
                     <div key={cita.id} className='grid grid-cols-2 m-2 border'>
-                      <div className='flex flex-col gap-1 p-2 border-l-4 border-indigo-500'>
+                      <div className={`flex flex-col gap-1 p-2 border-l-4 border-indigo-500`}>
                         <p className='text-lg font-bold'>{cita.cliente}</p>
                         <p className='text-lg text-gray-700'><span className='font-semibold'>Servicio: </span>{cita.servicio}</p>
-                        <p className='text-sm text-indigo-600 font-bold' >{cita.fecha} {cita.hora}</p>
+                        <p className='text-sm text-indigo-600 font-bold'>{cita.fecha} {formatearHora(cita.hora)}</p>
                       </div>
                     </div>
-                  ) 
-                })
-                }
+                      ) 
+                    })
+                  }
+                  </div>
+                )}
               </div>
             )
           }

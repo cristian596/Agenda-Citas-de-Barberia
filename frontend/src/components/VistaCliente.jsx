@@ -106,6 +106,17 @@ const VistaCliente = () => {
         }
       }
     
+      //Formatear fecha de las citas 
+      const formatearHora = (hora24) => {
+        const [hora, minuto] = hora24.split(":").map(Number);
+
+        const periodo = hora >= 12 ? "PM" : "AM";
+        const hora12 = hora % 12 || 12;
+
+        return `${hora12.toString().padStart(2, "0")}:${minuto
+          .toString()
+          .padStart(2, "0")} ${periodo}`;
+      };
       //Funcion para eliminar citas del backend
       const eliminarCitas = async (id) =>{
         //Confirmacion para evitar clicks erroneos
@@ -234,16 +245,16 @@ const VistaCliente = () => {
                     <div className='grid grid-cols-3 gap-2'>
                       {Horas_Disponibles.map((horaOp)=>{
                         //Verificamos si esta tarjeta es la que el ususario selecciono actualmente
-                        const estaSeleccionada = hora === horaOp.label
+                        const estaSeleccionada = hora === horaOp.value
                         //Buscamos si hay una cita con la misma fecha y hora
-                        const estaOcupada = citas.some(cita => cita.fecha === fecha && cita.hora === horaOp.label)
+                        const estaOcupada = citas.some(cita => cita.fecha === fecha && cita.hora === horaOp.value)
     
                         return(
                           <button
-                          key={horaOp.label}
+                          key={horaOp.value}
                           type='button'
                           disabled = {estaOcupada}
-                          onClick={()=> setHora(horaOp.label)}
+                          onClick={()=> setHora(horaOp.value)}
                           className={`p-3 text-sm font-medium rounded-lg border text-center transition-all cursor-pointer ${
                             estaSeleccionada
                             ? "bg-indigo-600 text-white border-indigo-600 shadow-md transform scale-105"
@@ -282,7 +293,7 @@ const VistaCliente = () => {
                         <div>
                           <p className='font-bold text-gray-900 text-lg'>{cita.cliente}</p>
                           <p className='text-sm text-gray-700 mt-1'> <span className='font-semibold'>Servicio: </span>{cita.servicio}</p>
-                          <p className='text-sm text-indigo-600 font-medium mt-2'>{cita.hora}</p>
+                          <p className='text-sm text-indigo-600 font-medium mt-2'>{formatearHora(cita.hora)}</p>
                         </div>
     
                         {/*Boton para eliminar citas */}
