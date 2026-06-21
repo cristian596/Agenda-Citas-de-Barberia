@@ -54,20 +54,22 @@ const VistaBarbero = () => {
     <div className='flex flex-col justify-center items-center p-10'>
       <div>
         <div className='text-center'>
-          <h1 className='text-4xl text-indigo-600 mb-2 font-serif'>Citas Agendadas</h1>
-          <p className='text-lg text-mauve-900 font-medium'>Cada cliente llega buscando un cambio; está en tus manos convertir ese momento en una experiencia inolvidable. ¡Haz que cada corte cuente! 💈✂️</p>
+          <h1 className='text-5xl text-indigo-600 mb-2 font-serif font-semibold'>Agenda del barbero</h1>
+          <p className='text-lg text-mauve-900 font-medium m-2'>Cada cliente llega buscando un cambio; está en tus manos convertir ese momento en una experiencia inolvidable. ¡Haz que cada corte cuente! 💈✂️</p>
         </div>
 
         <div>
-          <div className='flex justify-end'>
+          <div className='flex justify-between items-center'>  
+            <label htmlFor="" className='font-serif text-2xl font-semibold'>Filtra por fechas</label>
             <input
             type="date" 
-            className='mt-4'
+            className='mt-2 mb-2 px-10 text-xl cursor-pointer'
             value={fecha}
             min={fechaHoy}
             onChange={(e)=>setFecha(e.target.value)}
             />
           </div>
+          <hr />
           <div className='flex flex-col justify-center items-center p-2'>
             {citasCargando ? (
               <p className="text-gray-500">Cargando Citas...</p>
