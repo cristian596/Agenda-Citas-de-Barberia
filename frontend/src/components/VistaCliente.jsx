@@ -35,7 +35,7 @@ const Servicios_Mujeres = [
 ];
 
 const VistaCliente = () => {
-      //Estaado que guarda las citas que vienen del backend
+      //Estado que guarda las citas que vienen del backend
       const [citas, setCitas] = useState([]) 
       const [citasCargando, setCitasCargando] = useState(true)
     
